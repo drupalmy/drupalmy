@@ -1,0 +1,91 @@
+/* This file will hold the main styles for your website. */
+@darkblue: #002C50;
+@duriangreen: #8BC53F;
+h1,h2,h3 {
+  letter-spacing: 0px;
+}
+.menu-li-defaults {
+  list-style: none;
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: url(../images/bg.png) repeat-x;
+  &.admin-menu {
+    background: url(../images/bg.png) repeat-x 0 30px;
+  }
+}
+h1.site-name {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+.logo-img {
+  margin-top: 32px;
+}
+#section-header {
+  margin-bottom: 44px;
+}
+#block-system-main-menu {
+  ul.menu {
+    background: @darkblue;
+    height: 78px;
+    li {
+      .menu-li-defaults
+    }
+    a {
+      color: #3C92CF;
+      display: block;
+      font-size: 24px;
+      height: 78px;
+      line-height: 110px;
+      padding: 0px 15px;
+      text-decoration: none;
+      text-transform: uppercase;
+      &:hover, &.active {
+        background: @duriangreen;
+        color: #002C50;
+      }
+    }
+  }
+}
+#block-system-user-menu {
+  margin-top: 7px;
+  ul.menu {
+    background: @darkblue;
+    height: 23px;
+    li {
+      .menu-li-defaults;
+      &.first {
+        float: left;
+      }
+      &.last {
+        float: right;
+      }
+    }
+    a {
+      color: #8BC53F;
+      padding: 0 10px;
+      text-decoration: none;
+    }
+  }
+}
+#block-block-1 {
+  background: #CCC;
+  color: #666;
+  text-align: right;
+  padding: 20px 12px;
+  h3 {
+    font-size: 22px;
+    line-height: 1.2em;
+    margin: 0;
+    font-weight: normal;
+    letter-spacing: 0px;
+  }
+  a {
+    color: #0071BC;
+    text-decoration: none;
+    font-weight: bold;
+  }
+}
