@@ -9,11 +9,11 @@ h1, h2, h3 {
   padding: 0;
 }
 body {
-  background: url(../images/bg.png) repeat-x;
+  background: url(../images/bg.png) repeat-x #f2f2f2;
   padding-bottom: 150px;
 }
 body.admin-menu {
-  background: url(../images/bg.png) repeat-x 0 30px;
+  background: url(../images/bg.png) repeat-x 0 30px #f2f2f2;
 }
 h1.site-name {
   position: absolute !important;
