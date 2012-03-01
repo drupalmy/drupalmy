@@ -8,7 +8,7 @@
         }, function() {
           $('.views-field-body', this).stop(false, true).slideUp('fast');
         });
-      })
+      });
     }
   }
 })(jQuery);
