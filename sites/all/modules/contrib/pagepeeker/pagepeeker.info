@@ -1,0 +1,13 @@
+name = PagePeeker Screenshots
+description = Retieve web page screenshots from the <a target="_blank" href="http://pagepeeker.com/">PagePeeker</a> service.
+core = 7.x
+php = 5.2
+
+files[] = pagepeeker.test
+
+; Information added by drupal.org packaging script on 2011-12-21
+version = "7.x-1.1"
+core = "7.x"
+project = "pagepeeker"
+datestamp = "1324474243"
+

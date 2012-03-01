@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Feature: Drupal.my Showcase feature.
+ */
+
+include_once('feature_drupal_my_showcase.features.inc');

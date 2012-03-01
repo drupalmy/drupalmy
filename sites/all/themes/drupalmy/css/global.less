@@ -15,14 +15,23 @@ body {
   &.admin-menu {
     background: url(../images/bg.png) repeat-x 0 30px;
   }
+  padding-bottom: 150px;
 }
-h1.site-name {
-  position: absolute !important;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px);
+h1 {
+  &.site-name {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+  }
+  &.title {
+    color: #0071BC;
+  }
 }
 .logo-img {
   margin-top: 32px;
+}
+.site-name-slogan {
+  display: none;
 }
 #section-header {
   margin-bottom: 44px;
@@ -87,5 +96,48 @@ h1.site-name {
     color: #0071BC;
     text-decoration: none;
     font-weight: bold;
+  }
+}
+
+/* Showcase Views */
+.view-showcase {
+  ul {
+    margin: 0;
+    li {
+      float: left;
+      margin: 0;
+      &.views-row-odd {
+        margin-right: 20px;
+      }
+    }
+  }
+  h3 {
+    margin: 0;
+    text-align: center;
+  }
+  a {
+    text-decoration: none;
+  }
+  .views-field-view-node {
+    text-align: right;
+  }
+  .views-row {
+    position: relative;
+    z-index: 0;
+  }
+  .views-field-body {
+    background: #333;
+    bottom: 0;
+    color: #FFF;
+    display: none;
+    padding: 15px;
+    padding-bottom: 0;
+    position: absolute;
+    width: 250px;
+    z-index: 10;
+  }
+  img {
+    height: 210px;
+    width: 280px;
   }
 }
