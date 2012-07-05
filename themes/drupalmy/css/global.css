@@ -34,6 +34,19 @@ h1.title {
 #section-header {
   margin-bottom: 44px;
 }
+#section-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+#zone-footer,
+#zone-footer a {
+  color: #ccc;
+}
+#zone-footer {
+  border-top: 1px solid #dedede;
+  padding: 20px 0;
+}
+
 /* Events Views Block */
 #block-views-events-block {
   background: #002C50;
