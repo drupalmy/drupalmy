@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Implements hook_skinr_api_VERSION().
+ */
+function skinr_drupalmy_skinr_api_2() {
+  return array(
+    'directory' => 'skins',
+  );
+}

@@ -47,6 +47,28 @@ h1.title {
   padding: 20px 0;
 }
 
+.sidebar .block {
+  background: #e6e6e6;
+  margin-bottom: 20px;
+  padding: 8px 10px 5px 10px;
+
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+}
+.sidebar .block .block-title {
+  color: #0071bc;
+  font-size: 22px;
+}
+.sidebar .block-highlight {
+  background: #002c50;
+  color: #f2f2f2;
+}
+.sidebar .block-highlight .block-title {
+  color: #8bc53f;
+}
+
 /* Events Views Block */
 #block-views-events-block {
   background: #002C50;

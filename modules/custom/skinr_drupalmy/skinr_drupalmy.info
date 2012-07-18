@@ -1,0 +1,4 @@
+name = Skinr Drupal Malaysia
+description = Implements Skinr for Drupal.org.my.
+package = Skinr
+core = 7.x
