@@ -18,7 +18,7 @@
       <?php endif; ?>
 
 	    <div class="submitted-name"><?php print $name; ?></div>
-      <div class="submitted-created">posted <?php print format_interval(REQUEST_TIME - $node->created) . t(' ago'); ?></div>
+      <div class="submitted-created">posted <?php $teaser ? print format_interval(REQUEST_TIME - $node->created) . t(' ago') : print t('on ') . format_date($node->created, 'custom', 'F j, Y - g:ia'); ?></div>
     </div>
   <?php endif; ?>  
   
