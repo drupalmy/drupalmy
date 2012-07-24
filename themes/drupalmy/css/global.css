@@ -318,4 +318,8 @@ fieldset .fieldset-wrapper .form-item {
   background: #e6e6e6;
   margin-bottom: 20px;
   padding: 20px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
 }
