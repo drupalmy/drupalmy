@@ -36,6 +36,47 @@ h1 {
 #section-header {
   margin-bottom: 44px;
 }
+#zone-footer {
+  border-top: 1px solid #dedede;
+  color: #aaa;
+  padding: 20px 0;
+
+  a {
+    color: #aaa;
+  }
+}
+
+.sidebar {
+  .block {
+	  background: #e6e6e6;
+	  margin-bottom: 20px;
+	  padding: 8px 10px 5px 10px;
+	
+	  -moz-border-radius: 5px;
+	  -webkit-border-radius: 5px;
+	  -khtml-border-radius: 5px;
+	  border-radius: 5px;
+	
+	  .block-title {
+	    color: #0071bc;
+		  font-size: 22px;
+	  }
+  }
+
+  .block-highlight {
+    background: #002c50;
+    color: #f2f2f2;
+
+	  a {
+      color: #8bc53f;
+    }
+
+    .block-title {
+      color: #8bc53f;
+    }
+  }
+}
+
 /* Events Views Block */
 #block-views-events-block {
   background: #002C50;
@@ -170,5 +211,102 @@ h1 {
   img {
     height: 210px;
     width: 280px;
+  }
+}
+
+/* Node */
+.node-end-wrapper {
+  height: 31px;
+  margin: 30px 0 10px 0;
+  position: relative;
+}
+.node-end-line {
+  background: #ccc;
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 14px;
+  width: 100%;
+}
+.node-end-line-icon {
+  background: url(../images/icon-durian.png) no-repeat;
+  height: 31px;
+  margin: 0 auto;
+  position: relative;
+  width: 56px;
+}
+.node-article {
+  .field-name-field-image {
+    float: left;
+    margin-right: 10px;
+  }
+
+  .node-links {
+    margin-top: 15px;
+  }
+
+  .submitted-wrapper {
+    color: #999;
+    margin-bottom: 25px;
+
+    .submitted-name {
+      font-weight: bold;
+    }
+
+    .submitted-pic {
+	    float: left;
+      margin-right: 6px;
+
+      img {
+        border: 1px solid #999;
+      }
+    }
+  }
+}
+
+/* System */
+.form-item {
+  margin-bottom: 2em;
+}
+.form-type-password-confirm .form-item {
+  margin: 0;
+}
+fieldset,
+html.js fieldset.collapsed {
+  border: 1px solid #ccc;
+}
+fieldset {
+  padding: 25px 14px 12px 14px;
+}
+html.js fieldset.collapsed {
+  height: auto;
+}
+fieldset .fieldset-legend,
+html.js fieldset.collapsible .fieldset-legend {
+  background: none;
+  font-weight: bold;
+  height: auto;
+  margin-top: 0.8em;
+  padding-left: 0;
+  position: absolute;
+  text-transform: uppercase;
+}
+fieldset .fieldset-wrapper {
+  padding-top: 4px;
+
+  .form-item {
+    margin-bottom: 8px;
+  }
+}
+.item-list .pager {
+  margin-top: 15px;
+}
+
+/* Search */
+.sidebar .block-search {
+  padding: 8px 10px;
+
+  input.form-text {
+    width: 70%;
   }
 }
