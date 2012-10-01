@@ -323,3 +323,32 @@ fieldset .fieldset-wrapper .form-item {
   -khtml-border-radius: 5px;
   border-radius: 5px;
 }
+
+/* Views - Members list */
+.view-member-s-list table.views-view-grid,
+.view-member-s-list table.views-view-grid thead,
+.view-member-s-list table.views-view-grid th,
+.view-member-s-list table.views-view-grid tr,
+.view-member-s-list table.views-view-grid td {
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.view-member-s-list table.views-view-grid td {
+  border: 1px solid #dfdfdf;
+  padding: 10px;
+  text-align: center;
+}
+.view-member-s-list table.views-view-grid .views-field-picture img {
+  border: 5px solid #e1e1e1;
+  margin-bottom: 3px;
+}
+.view-member-s-list table.views-view-grid .views-field-name {
+  font-weight: bold;
+}
+.view-member-s-list table.views-view-grid .views-field-rid {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+}
