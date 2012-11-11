@@ -232,9 +232,11 @@
   /**
    * Support Drupal's 'behaviors' system for binding.
    */
-  Drupal.behaviors.CToolsCollapsible = {
+  Drupal.behaviors.CToolsCollapsible = { 
     attach: function(context) {
-      $('.ctools-collapsible-container', context).once('ctools-collapsible', Drupal.CTools.bindCollapsible);
+      $('.ctools-collapsible-container:not(.ctools-collapsible-processed)', context)
+        .each(Drupal.CTools.bindCollapsible)
+        .addClass('ctools-collapsible-processed');
     }
   }
 })(jQuery);
