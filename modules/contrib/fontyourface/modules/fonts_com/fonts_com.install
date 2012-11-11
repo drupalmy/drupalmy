@@ -22,16 +22,7 @@ function fonts_com_enable() {
 function fonts_com_disable() {
 
   fontyourface_provider_disable('fonts_com');
-
-} // fonts_com_disable
-
-/**
- * Implements hook_uninstall().
- */
-function fonts_com_uninstall() {
-
   variable_del('fonts_com_project');
   variable_del('fonts_com_filter_choices');
-  variable_del('fonts_com_token');
 
-} // fonts_com_uninstall
+} // fonts_com_disable
