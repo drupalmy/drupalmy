@@ -198,19 +198,15 @@ class RulesEntityController extends EntityAPIControllerExportable {
     $query = parent::buildQuery($ids, $conditions, $revision_id);
     $query_conditions =& $query->conditions();
     foreach ($query_conditions as &$condition) {
-      // One entry in $query_conditions is a string with key '#conjunction'.
-      // @see QueryConditionInterface::conditions().
-      if (is_array($condition)) {
-        // Support using 'tags' => array('tag1', 'tag2') as condition.
-        if ($condition['field'] == 'base.tags') {
-          $query->join('rules_tags', 'rt', 'base.id = rt.id');
-          $condition['field'] = 'rt.tag';
-        }
-        // Support using 'event' => $name as condition.
-        if ($condition['field'] == 'base.event') {
-          $query->join('rules_trigger', 'tr', "base.id = tr.id");
-          $condition['field'] = 'tr.event';
-        }
+      // Support using 'tags' => array('tag1', 'tag2') as condition.
+      if ($condition['field'] == 'base.tags') {
+        $query->join('rules_tags', 'rt', 'base.id = rt.id');
+        $condition['field'] = 'rt.tag';
+      }
+      // Support using 'event' => $name as condition.
+      if ($condition['field'] == 'base.event') {
+        $query->join('rules_trigger', 'tr', "base.id = tr.id");
+        $condition['field'] = 'tr.event';
       }
     }
     return $query;
@@ -893,11 +889,6 @@ abstract class RulesPlugin extends RulesExtendable {
       throw new RulesEvaluationException('The provided argument for parameter %name is empty.', array('%name' => $name), $this);
     }
 
-    // Support passing already sanitized values.
-    if ($info['type'] == 'text' && !isset($skip_sanitize) && !empty($info['sanitize']) && !($arg instanceof EntityMetadataWrapper)) {
-      $arg = check_plain((string) $arg);
-    }
-
     // Apply any configured data processors.
     if (!empty($this->settings[$name . ':process'])) {
       // For processing, make sure the data is unwrapped now.
@@ -907,6 +898,10 @@ abstract class RulesPlugin extends RulesExtendable {
       $info['#name'] = $name;
       $info['#langcode'] = $langcode;
       return isset($return[0]) ? $this->settings[$name . ':process']->process($return[0], $info, $state, $this) : NULL;
+    }
+    // Support passing already sanitized values.
+    if ($info['type'] == 'text' && !isset($skip_sanitize) && !empty($info['sanitize']) && !($arg instanceof EntityMetadataWrapper)) {
+      return check_plain((string) $arg);
     }
     return $arg;
   }
