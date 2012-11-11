@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implementation of hook_features_api().
+ * Implements hook_features_api().
  */
 function fe_block_features_api() {
   $info = array();
@@ -10,7 +10,7 @@ function fe_block_features_api() {
   $info[$key] = array(
     'name' => t('Block settings'),
     'feature_source' => TRUE,
-    'default_hook' => 'default_'. $key,
+    'default_hook' => 'default_' . $key,
     'default_file' => FEATURES_DEFAULTS_INCLUDED,
   );
 
@@ -18,7 +18,7 @@ function fe_block_features_api() {
   $info[$key] = array(
     'name' => t('Block contents (boxes)'),
     'feature_source' => TRUE,
-    'default_hook' => 'default_'. $key,
+    'default_hook' => 'default_' . $key,
     'default_file' => FEATURES_DEFAULTS_INCLUDED,
   );
 
@@ -26,7 +26,7 @@ function fe_block_features_api() {
 }
 
 /**
- * Implementation of hook_features_export_options().
+ * Implements hook_features_export_options().
  */
 function fe_block_settings_features_export_options() {
   $options = array();
@@ -36,7 +36,7 @@ function fe_block_settings_features_export_options() {
 
   foreach ($blocks as $block) {
     // @see features.block.inc
-    if (strpos($block['module'], '-') !== false) {
+    if (strpos($block['module'], '-') !== FALSE) {
       continue;
     }
 
@@ -44,21 +44,21 @@ function fe_block_settings_features_export_options() {
     if (empty($block_id)) {
       continue;
     }
-    $options[$block_id] = '['. $block_id .'] '. $block['info'];
+    $options[$block_id] = '[' . $block_id . '] ' . $block['info'];
   }
 
   return $options;
 }
 
 /**
- * Implementation of hook_features_export().
+ * Implements hook_features_export().
  */
 function fe_block_settings_features_export($data, &$export, $module_name = '') {
   $pipe = array();
   $export['dependencies']['fe_block'] = 'fe_block';
 
   $component = 'fe_block_settings';
-  // Add the components
+  // Add the components.
   foreach ($data as $object_name) {
     $export['features'][$component][$object_name] = $object_name;
 
@@ -67,7 +67,7 @@ function fe_block_settings_features_export($data, &$export, $module_name = '') {
       $machine_name = substr($object_name, strlen('block-'));
       $pipe['fe_block_boxes'][$machine_name] = $machine_name;
     }
-    // TODO: menu blocks.
+    // @todo Export menu blocks.
     // Others.
     else {
       $pipe['block'][$object_name] = $object_name;
@@ -78,7 +78,7 @@ function fe_block_settings_features_export($data, &$export, $module_name = '') {
 }
 
 /**
- * Implementation of hook_features_export_render().
+ * Implements hook_features_export_render().
  */
 function fe_block_settings_features_export_render($module_name = '', $data) {
   global $custom_theme, $theme_key;
@@ -86,7 +86,7 @@ function fe_block_settings_features_export_render($module_name = '', $data) {
   $backup = array($custom_theme, $theme_key);
 
   $component = 'fe_block_settings';
-  $default_hook = 'default_'. $component;
+  $default_hook = 'default_' . $component;
   $theme_default = variable_get('theme_default', 'garland');
   $themes = list_themes();
 
@@ -94,12 +94,62 @@ function fe_block_settings_features_export_render($module_name = '', $data) {
   $code[] = '  $export = array();';
   $code[] = '';
 
+  // Provide backwards compatibility.
+  $code[] = '  $export[\'version\'] = \'1.0\';';
+  $code[] = '';
+
+  // Retrieve node type visibility settings.
+  $block_node_types = array();
+  $result = db_query('SELECT module, delta, type FROM {block_node_type}');
+  foreach ($result as $record) {
+    $block_node_types[$record->module][$record->delta][$record->type] = TRUE;
+  }
+
+  // Filter all blocks, keeping only the ones that will be exported.
+  $blocks = _block_rehash();
+  usort($blocks, '_fe_block_compare');
+  foreach ($blocks as $key => $block) {
+    $block_id = _fe_block_build_id($block);
+    if (empty($block_id) || !in_array($block_id, $data)) {
+      unset($blocks[$key]);
+    }
+  }
+
+  // Export theme independent visibility settings.
+  $code[] = '  // Theme independent visibility settings.';
+
+  $visibility = array();
+  foreach ($blocks as $block) {
+    $block_id = _fe_block_build_id($block);
+    $visibility[$block_id]['module'] = $block['module'];
+    // Use machine name with boxes.
+    if ($block['module'] == 'block') {
+      $visibility[$block_id]['machine_name'] = _fe_block_get_machine_name($block['delta']);
+    }
+    else {
+      $visibility[$block_id]['delta'] = $block['delta'];
+    }
+
+    // Export node type visibility.
+    $visibility[$block_id]['node_type'] = !empty($block_node_types[$block['module']][$block['delta']]) ? $block_node_types[$block['module']][$block['delta']] : array();
+
+    // @todo export role visibility.
+  }
+
+  // Sort the array and remove empty values.
+  _features_sanitize($visibility);
+
+  $code[] = '  $export[\'visibility\'] = ' . features_var_export($visibility, '  ') . ';';
+  $code[] = '';
+
+  // Export theme specific settings.
   foreach ($themes as $_theme_key => $theme) {
     if ($_theme_key == $theme_default || !empty($theme->status)) {
-      $code[] = '  // '. $_theme_key;
+      $code[] = '  // ' . $_theme_key;
       $code[] = '  $theme = array();';
       $code[] = '';
 
+      // Get the block list for the current theme.
       $custom_theme = $theme_key = $_theme_key;
       $blocks = _block_rehash();
       usort($blocks, '_fe_block_compare');
@@ -122,22 +172,22 @@ function fe_block_settings_features_export_render($module_name = '', $data) {
             $block['region'] = '';
           }
 
-          $code[] = '  $theme[\''. $block_id .'\'] = '. features_var_export($block, '  ') .';';
+          $code[] = '  $theme[\'' . $block_id . '\'] = ' . features_var_export($block, '  ') . ';';
           $code[] = '';
         }
       }
 
-      $code[] = '  $export[\''. $_theme_key .'\'] = $theme;';
+      $code[] = '  $export[\'theme\'][\'' . $_theme_key . '\'] = $theme;';
       $code[] = '';
     }
   }
 
-  // Only reture for enabled themes and the default theme.
+  // Only return for enabled themes and the default theme.
   $code[] = '  $theme_default = variable_get(\'theme_default\', \'garland\');';
   $code[] = '  $themes = list_themes();';
   $code[] = '  foreach ($export as $theme_key => $settings) {';
   $code[] = '    if ($theme_key != $theme_default && empty($themes[$theme_key]->status)) {';
-  $code[] = '      unset($export[$theme_key]);';
+  $code[] = '      unset($export[\'theme\'][$theme_key]);';
   $code[] = '    }';
   $code[] = '  }';
   $code[] = '  return $export;';
@@ -148,33 +198,96 @@ function fe_block_settings_features_export_render($module_name = '', $data) {
 }
 
 /**
- * Implementation of hook_features_revert().
+ * Implements hook_features_revert().
  */
 function fe_block_settings_features_revert($module_name = NULL) {
   global $custom_theme, $theme_key;
   $component = 'fe_block_settings';
   $defaults = features_get_default($component, $module_name);
+  if (empty($defaults)) {
+    return;
+  }
 
-  // Revert.
-  foreach ($defaults as $_theme_key => $theme) {
+  // Provide backwards compatibility with the old export format that only
+  // supported theme specific settings.
+  if ($new_format = (isset($defaults['version']) && $defaults['version'] == '1.0')) {
+    $themes = $defaults['theme'];
+  }
+  else {
+    $themes = $defaults;
+  }
+
+  // Revert theme specific settings.
+  foreach ($themes as $_theme_key => $theme) {
     $custom_theme = $theme_key = $_theme_key;
     _block_rehash();
 
     foreach ($theme as $block) {
       // Convert machine name back to bid.
       if ($block['module'] == 'block') {
-        $block['delta'] = _fe_block_get_bid($block['machine_name']);
+        $block['delta'] = _fe_block_get_bid($block['machine_name'], TRUE);
       }
 
       drupal_write_record('block', $block, array('module', 'delta', 'theme'));
     }
   }
 
+
+  // Revert node type visibility settings. These have been introduced with the
+  // new export format.
+  if ($new_format) {
+    foreach ($defaults['visibility'] as $block) {
+      // Convert machine name back to bid.
+      if ($block['module'] == 'block') {
+        $block['delta'] = _fe_block_get_bid($block['machine_name']);
+      }
+
+      db_delete('block_node_type')
+        ->condition('module', $block['module'])
+        ->condition('delta', $block['delta'])
+        ->execute();
+      if (!empty($block['node_type'])) {
+        $query = db_insert('block_node_type')->fields(array('type', 'module', 'delta'));
+        foreach ($block['node_type'] as $type => $value) {
+          if ($value) {
+            $query->values(array(
+              'type' => $type,
+              'module' => $block['module'],
+              'delta' => isset($block['delta']) ? $block['delta'] : 0,
+            ));
+          }
+        }
+        $query->execute();
+      }
+    }
+  }
+  // Clear block cache
+  cache_clear_all(NULL, 'cache_block');
+
   return TRUE;
 }
 
 /**
- * Implementation of hook_features_export_options().
+ * Implements hook_features_disable_feature().
+ *
+ * @param $module
+ *   Name of module that has been disabled.
+ */
+function fe_block_settings_features_disable_feature($module) {
+}
+
+/**
+ * Implements hook_features_enable_feature().
+ *
+ * @param $module
+ *   Name of module that has been enabled.
+ */
+function fe_block_settings_features_enable_feature($module) {
+  fe_block_settings_features_revert($module);
+}
+
+/**
+ * Implements hook_features_export_options().
  */
 function fe_block_boxes_features_export_options() {
   $table = 'fe_block_boxes';
@@ -201,7 +314,7 @@ function fe_block_boxes_features_export_options() {
 }
 
 /**
- * Implementation of hook_features_export().
+ * Implements hook_features_export().
  */
 function fe_block_boxes_features_export($data, &$export, $module_name = '') {
   $pipe = array();
@@ -217,7 +330,7 @@ function fe_block_boxes_features_export($data, &$export, $module_name = '') {
 }
 
 /**
- * Implementation of hook_features_export_render().
+ * Implements hook_features_export_render().
  */
 function fe_block_boxes_features_export_render($module_name = '', $data) {
   ctools_include('export');
@@ -234,19 +347,18 @@ function fe_block_boxes_features_export_render($module_name = '', $data) {
 
       $additions = array();
       // Load box.
-      if (!empty($object->bid)) {
-        $box = block_custom_block_get($object->bid);
-        if ($box) $additions = (array) $box;
+      if (!empty($object->bid) && $box = block_custom_block_get($object->bid)) {
+        $additions = (array) $box;
         unset($additions['bid'], $additions['body']);
-      }
 
-      // Code.
-      $identifier = $schema['export']['identifier'];
-      $code[] = ctools_export_object($component, $object, '  ', $identifier, $additions)
-               .'  $'. $identifier .'->body = '. features_var_export($box['body']) .';';
-      $code[] = '';
-      $code[] = '  $export[\''. $machine_name .'\'] = $'. $identifier .';';
-      $code[] = '';
+        // Code.
+        $identifier = $schema['export']['identifier'];
+        $code[] = ctools_export_object($component, $object, '  ', $identifier, $additions)
+                 . '  $' . $identifier . '->body = ' . features_var_export($box['body']) . ';';
+        $code[] = '';
+        $code[] = '  $export[\'' . $machine_name . '\'] = $' . $identifier . ';';
+        $code[] = '';
+      }
     }
   }
   $code[] = '  return $export;';
@@ -256,11 +368,11 @@ function fe_block_boxes_features_export_render($module_name = '', $data) {
 }
 
 /**
- * Implementation of hook_features_revert().
+ * Implements hook_features_revert().
  */
 function fe_block_boxes_features_revert($module_name = NULL) {
   $table = 'fe_block_boxes';
-  $defaults = features_get_default($table,$module_name);
+  $defaults = features_get_default($table, $module_name);
   if (empty($defaults)) {
     return;
   }
@@ -285,8 +397,29 @@ function fe_block_boxes_features_revert($module_name = NULL) {
       $result = _fe_block_save_box((array) $object);
     }
   }
+  // Clear block cache
+  cache_clear_all(NULL, 'cache_block');
 
   return TRUE;
+}
+
+/**
+ * Implements hook_features_disable_feature().
+ *
+ * @param $module
+ *   Name of module that has been disabled.
+ */
+function fe_block_boxes_features_disable_feature($module) {
+}
+
+/**
+ * Implements hook_features_enable_feature().
+ *
+ * @param $module
+ *   Name of module that has been enabled.
+ */
+function fe_block_boxes_features_enable_feature($module) {
+  fe_block_boxes_features_revert($module);
 }
 
 /**
@@ -294,7 +427,7 @@ function fe_block_boxes_features_revert($module_name = NULL) {
  */
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function fe_block_form_alter(&$form, $form_state, $form_id) {
   $default_values = array();
@@ -349,7 +482,7 @@ function fe_block_machine_name_validate($form, &$form_state) {
                 ->condition('machine_name', $form_state['values']['machine_name']);
 
   $count = $query->countQuery()->execute()->fetchField();
-  
+
   if (!preg_match('!^[a-z0-9_]+$!', $form_state['values']['machine_name'])) {
     form_set_error('machine_name', t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
   }
@@ -415,16 +548,16 @@ function _fe_block_compare($a, $b) {
 function _fe_block_get_machine_name($bid) {
   static $cache = array();
   if (!isset($cache[$bid])) {
-    
+
     $query = db_select('fe_block_boxes')
                 ->fields('fe_block_boxes', array('machine_name') )
                 ->condition('bid', $bid)->execute();
-    
-    if($block = $query->fetch()) {
-        $cache[$bid] = $block->machine_name;
+
+    if ($block = $query->fetch()) {
+      $cache[$bid] = $block->machine_name;
     }
     else {
-        return NULL;
+      return NULL;
     }
   }
   return $cache[$bid];
@@ -433,12 +566,12 @@ function _fe_block_get_machine_name($bid) {
 /**
  * Get box bid.
  */
-function _fe_block_get_bid($machine_name) {
+function _fe_block_get_bid($machine_name, $reset = FALSE) {
   static $cache = array();
-  if (!isset($cache[$machine_name])) {
+  if (!isset($cache[$machine_name]) || $reset) {
     $query = db_select('fe_block_boxes')
-                ->fields('fe_block_boxes', array('bid') )
-                ->condition('machine_name', $machine_name)->execute();
+      ->fields('fe_block_boxes', array('bid') )
+      ->condition('machine_name', $machine_name)->execute();
 
     $cache[$machine_name] = (int) $query->fetch()->bid;
   }
@@ -457,10 +590,10 @@ function _fe_block_build_id($block) {
     if (empty($machine_name)) {
       return NULL;
     }
-    return $block['module'] .'-'. $machine_name;
+    return $block['module'] . '-' . $machine_name;
   }
   else {
-    return $block['module'] .'-'. $block['delta'];
+    return $block['module'] . '-' . $block['delta'];
   }
 }
 
