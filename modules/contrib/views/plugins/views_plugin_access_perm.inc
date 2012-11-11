@@ -1,14 +1,7 @@
 <?php
 
 /**
- * @file
- * Definition of views_plugin_access_perm.
- */
-
-/**
  * Access plugin that provides permission-based access control.
- *
- * @ingroup views_access_plugins
  */
 class views_plugin_access_perm extends views_plugin_access {
   function access($account) {
@@ -49,7 +42,7 @@ class views_plugin_access_perm extends views_plugin_access {
       }
     }
 
-    ksort($perms);
+    asort($perms);
 
     $form['perm'] = array(
       '#type' => 'select',

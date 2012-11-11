@@ -87,7 +87,7 @@ function rules_action_mail($to, $subject, $message, $from = NULL, $langcode, $se
   $name = isset($element->root()->name) ? $element->root()->name : 'unnamed';
   $key = 'rules_action_mail_' . $name . '_' . $element->elementId();
   $languages = language_list();
-  $language = isset($languages[$langcode]) ? $languages[$langcode] : language_default();
+  $language = $langcode == LANGUAGE_NONE ? language_default() : $languages[$langcode];
 
   $message = drupal_mail('rules', $key, $to, $language, $params, $from);
   if ($message['result']) {
