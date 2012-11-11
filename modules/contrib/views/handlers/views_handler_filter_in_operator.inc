@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @file
- * Definition of views_handler_filter_in_operator.
- */
-
 /**
  * Simple filter to handle matching of multiple options selectable via checkboxes
  *
@@ -80,7 +74,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
 
     $options['operator']['default'] = 'in';
     $options['value']['default'] = array();
-    $options['expose']['contains']['reduce'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['expose']['contains']['reduce'] = array('default' => FALSE);
 
     return $options;
   }
@@ -290,9 +284,6 @@ class views_handler_filter_in_operator extends views_handler_filter {
   }
 
   function admin_summary() {
-    if ($this->is_a_group()) {
-      return t('grouped');
-    }
     if (!empty($this->options['exposed'])) {
       return t('exposed');
     }

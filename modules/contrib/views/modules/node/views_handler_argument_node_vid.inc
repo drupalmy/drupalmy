@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Provide node vid argument handler.
@@ -17,7 +16,7 @@ class views_handler_argument_node_vid extends views_handler_argument_numeric {
   function title_query() {
     $titles = array();
 
-    $result = db_query("SELECT n.title FROM {node_revision} n WHERE n.vid IN (:vids)", array(':vids' => $this->value));
+    $result = db_query("SELECT n.title FROM {node_revision} n WHERE n.nid IN (:nids)", array(':nids' => $this->value));
     foreach ($result as $term) {
       $titles[] = check_plain($term->title);
     }

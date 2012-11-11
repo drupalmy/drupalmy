@@ -16,12 +16,6 @@
  *   '#attributes' => array('class' => array('ctools-auto-submit-full-form')),
  * @endcode
  *
- * If you want to exclude a field from the ctool-auto-submit-full-form auto submission,
- * add the class ctools-auto-submit-exclude to the form element. With FAPI, add:
- * @code
- *   '#attributes' => array('class' => array('ctools-auto-submit-exclude')),
- * @endcode
- *
  * Finally, you have to identify which button you want clicked for autosubmit.
  * The behavior of this button will be honored if it's ajaxy or not:
  * @code
@@ -36,16 +30,15 @@ Drupal.behaviors.CToolsAutoSubmit = {
   attach: function(context) {
     // 'this' references the form element
     function triggerSubmit (e) {
-      var $this = $(this);
-      if (!$this.hasClass('ctools-ajaxing')) {
-        $this.find('.ctools-auto-submit-click').click();
+      if (!$(this).hasClass('ctools-ajaxing')) {
+        $(this).find('.ctools-auto-submit-click').click();
       }
     }
 
     // the change event bubbles so we only need to bind it to the outer form
     $('form.ctools-auto-submit-full-form', context)
       .add('.ctools-auto-submit', context)
-      .filter('form, select, input:not(:text, :submit, .ctools-auto-submit-exclude)')
+      .filter('form, select, input:not(:text, :submit)')
       .once('ctools-auto-submit')
       .change(function (e) {
         // don't trigger on text change for full-form
@@ -74,7 +67,6 @@ Drupal.behaviors.CToolsAutoSubmit = {
     ];
     // Don't wait for change event on textfields
     $('.ctools-auto-submit-full-form input:text, input:text.ctools-auto-submit', context)
-      .filter(':not(.ctools-auto-submit-exclude)')
       .once('ctools-auto-submit', function () {
         // each textinput element has his own timeout
         var timeoutID = 0;
