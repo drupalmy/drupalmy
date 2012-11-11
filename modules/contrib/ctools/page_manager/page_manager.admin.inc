@@ -27,11 +27,7 @@ function page_manager_list_page($js = NULL) {
   }
 
   if (module_exists('advanced_help') && !$js) {
-    drupal_set_message(theme('advanced_help_topic', array(
-      'module' => 'page_manager',
-      'topic' => 'getting-started',
-      'type' => t('See the getting started guide for more information.'),
-    )));
+    drupal_set_message(theme('advanced_help_topic', 'page_manager', 'getting-started', t('See the getting started guide for more information.')));
   }
 
   $tasks = page_manager_get_tasks_by_type('page');
@@ -1212,10 +1208,7 @@ function page_manager_render_operations(&$page, $operations, $active_trail, $att
   }
 
   if ($output[$location]) {
-    $classes = isset($attributes['class']) && is_array($attributes['class']) ? $attributes['class'] : array();
-    $classes[] = 'page-manager-operations';
-
-    $output[$location] = '<ul class="' . implode(' ', $classes) . '">' . $output[$location] . '</ul>';
+    $output[$location] = '<ul class="page-manager-operations ' . $attributes['class'] . '">' . $output[$location] . '</ul>';
 
     if (!empty($attributes['title'])) {
       $class = '';
