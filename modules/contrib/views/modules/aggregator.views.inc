@@ -1,14 +1,20 @@
 <?php
-
 /**
  * @file
- * Provide views data and handlers for aggregator.module.
- *
- * @ingroup views_module_handlers
+ * Provide views data and handlers for aggregator.module
  */
 
 /**
- * Implements hook_views_data().
+ * @defgroup views_aggregator_module aggregator.module handlers
+ *
+ * Includes the core 'aggregator_feed,' 'aggregator_category,' and 'aggregator_item'
+ * tables.
+ *
+ * @{
+ */
+
+/**
+ * Implements hook_views_data()
  */
 function aggregator_views_data() {
   // ----------------------------------------------------------------------
@@ -243,9 +249,6 @@ function aggregator_views_data() {
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_string',
-    ),
   );
 
   // link
@@ -260,6 +263,7 @@ function aggregator_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
@@ -277,6 +281,7 @@ function aggregator_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort_date',
     ),
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_date',
     ),
@@ -294,6 +299,7 @@ function aggregator_views_data() {
       'handler' => 'views_handler_field_xss',
       'click sortable' => FALSE,
      ),
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
@@ -384,7 +390,7 @@ function aggregator_views_data() {
 }
 
 /**
- * Implements hook_views_plugins().
+ * Implements hook_views_plugins
  */
 function aggregator_views_plugins() {
   return array(
@@ -404,3 +410,6 @@ function aggregator_views_plugins() {
     ),
   );
 }
+/**
+ * @}
+ */
