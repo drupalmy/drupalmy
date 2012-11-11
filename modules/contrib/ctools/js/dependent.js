@@ -1,15 +1,17 @@
 /**
  * @file
- * Provides dependent visibility for form items in CTools' ajax forms.
+ *
+ * Written by dmitrig01 (Dmitri Gaskin) for CTools; this provides dependent
+ * visibility for form items in CTools' ajax forms.
  *
  * To your $form item definition add:
- * - '#process' => array('ctools_process_dependency'),
- * - '#dependency' => array('id-of-form-item' => array(list, of, values, that,
- *   make, this, item, show),
+ * - '#process' => array('CTools_process_dependency'),
+ * - Add '#dependency' => array('id-of-form-item' => array(list, of, values, that,
+     make, this, item, show),
  *
  * Special considerations:
- * - Radios are harder. Because Drupal doesn't give radio groups individual IDs,
- *   use 'radio:name-of-radio'.
+ * - radios are harder. Because Drupal doesn't give radio groups individual ids,
+ *   use 'radio:name-of-radio'
  *
  * - Checkboxes don't have their own id, so you need to add one in a div
  *   around the checkboxes via #prefix and #suffix. You actually need to add TWO
@@ -213,8 +215,8 @@
 
       // Really large sets of fields are too slow with the above method, so this
       // is a sort of hacked one that's faster but much less flexible.
-      $("select.ctools-master-dependent")
-        .once('ctools-dependent')
+      $("select.ctools-master-dependent:not(.ctools-processed)")
+        .addClass('ctools-processed')
         .change(function() {
           var val = $(this).val();
           if (val == 'all') {
