@@ -587,10 +587,7 @@ function features_get_info($type = 'module', $name = NULL, $reset = FALSE) {
     $cache = cache_get('features_module_info');
   }
   if (empty($cache) || $reset) {
-    $data = array(
-      'feature' => array(),
-      'module' => array(),
-    );
+    $data = array();
     $ignored = variable_get('features_ignored_orphans', array());
     $files = system_rebuild_module_data();
 
