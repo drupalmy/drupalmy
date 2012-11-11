@@ -77,9 +77,7 @@ function ctools_term_list_content_type_render($subtype, $conf, $panel_args, $con
         }
       }
 
-      if (!empty($items)) {
-        $block->content = theme('item_list', array('items' => $items, 'type' => $conf['list_type']));
-      }
+      $block->content = theme('item_list', array('items' => $items, 'type' => $conf['list_type']));
     }
   }
   else {
