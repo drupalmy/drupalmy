@@ -209,12 +209,7 @@ function fontyourface_rewrite_css($css) {
   $destination_directory = dirname($destination);
 
   if (file_prepare_directory($destination_directory, FILE_CREATE_DIRECTORY)) {
-
-    // Only overwrite the CSS when it differs.
-    if ($css != file_get_contents($destination)) {
-      file_unmanaged_save_data($css, $destination, FILE_EXISTS_REPLACE);
-    } // if
-
+    file_unmanaged_save_data($css, $destination, FILE_EXISTS_REPLACE);
   } // if
   
 } // fontyourface_rewrite_css
@@ -574,7 +569,13 @@ function fontyourface_font_css($font) {
 
   if ($font->css_family) {
 
-    $family_list = "'" . $font->css_family . "'";
+    // Enclose font family definition in single quotes if not already enclosed.
+    if ($font->css_family[0] === "'") {
+      $family_list = $font->css_family;
+    } // if
+    else {
+      $family_list = "'" . $font->css_family . "'";
+    } // else
 
     if ($font->css_fallbacks) {
       $family_list .= ', ' . $font->css_fallbacks;
@@ -666,6 +667,12 @@ function fontyourface_delete_unused_tags() {
 
 /**
  * Logs to watchdog if logging is enabled.
+ *
+ * @param string $message
+ *   Log message. This should be a literal string; see
+ *   http://drupal.org/node/323101 for more details.
+ * @param array $arguments
+ *   Arguments to replace placeholders, if there are any, in $message.
  */
 function fontyourface_log($message, $arguments) {
 
